@@ -20,7 +20,7 @@ def msg_to_be_sent(message): # function for easily sending messages
     client.send(sending_length) # first send the SIZE of the message to the server
     client.send(send_message) # then send the actual message to the server
     # also have the ability to receive any messages from the server
-    received_msg = client.recv(2048).decode(format) # set a port 2048 for client listening
+    received_msg = client.recv(2048).decode(format) # set a buffer size 2048 for client listening
     print(received_msg) # show it on console
 
 msg_to_be_sent(f"Hello, the client's ip address is {ip_addr} and the hostname is {host_name}.") # send a sample message to the server
