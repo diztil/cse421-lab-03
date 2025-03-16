@@ -1,5 +1,5 @@
 import socket # import the necessary library
-import threading # import
+import threading # import threading library for 
 
 format = "utf-8" # decoding/encoding format for the message text
 buffer_size = 16 # maximum value for receiving
@@ -14,22 +14,6 @@ server.listen() # now the server can listen for clients
 print("Server is listening on port: ", str(port)) # just a print statement to know the server is ready
 
 def handle_clients(conn, addr): # function for individually handling clients
-    if message == "Bye": # if the client sends message that says "Bye"
-        conn.send("Goodbye".encode(format)) # send a message to client
-        print("Terminating connection with", addr) # print message to console
-        connected = False # disconnect
-    else: # otherwise, if it is a normal message
-        print(message) # show message on console
-        vowels = "aeiouAEIOU" # define a set of all possible English vowels
-        count = 0 # keep a track of the number of vowels
-        for i in message: # check every char in the message
-            if i in vowels: # if the char is a vowel
-                count += 1 # increase counter
-        conn.send(str(count).encode(format)) # send a message to client containing number of vowels
-
-
-while True: # continuously keep checking for any client messages
-    conn, addr = server.accept() # accept any incoming connections and set the values to a socket (conn) and socket address (addr)
     print("Connect to:",addr) # show which client is connected
     connected = True # set the connected status
     while connected: # as long as the server is connected to client
@@ -37,8 +21,27 @@ while True: # continuously keep checking for any client messages
         print("Length of the upcoming message:",msg_len) # show the message size
         if msg_len: # if the message length exists (is received)
             message = conn.recv(int(msg_len)).decode(format) # convert message size to int, after decoding
+            if message == "Bye": # if the client sends message that says "Bye"
+                conn.send("Goodbye".encode(format)) # send a message to client
+                print("Terminating connection with", addr) # print message to console
+                connected = False # disconnect
+            else: # otherwise, if it is a normal message
+                print(message) # show message on console
+                vowels = "aeiouAEIOU" # define a set of all possible English vowels
+                count = 0 # keep a track of the number of vowels
+                for i in message: # check every char in the message
+                    if i in vowels: # if the char is a vowel
+                        count += 1 # increase counter
+                conn.send(str(count).encode(format)) # send a message to client containing number of vowels
             
     conn.close() # close the connection, disconnect further
 
+
+while True: # continuously keep checking for any client messages
+    conn, addr = server.accept() # accept any incoming connections and set the values to a socket (conn) and socket address (addr)
+    thread = threading.Thread(target=handle_clients,args=(conn,addr)) # send any new clients to the handle_clients function
+    thread.start() # begin a new separate process
+
     # ===== NOTES =====
     # the port number may show random numbers every time because of getting random process IDs
+    # this code uses the threading library to allow multiple clients to connect to the same server
