@@ -27,4 +27,8 @@ while True: # continuously keep checking for any client messages
             else: # otherwise, if it is a normal message
                 conn.send("Message Received".encode(format)) # send a message to client
                 print(message) # show message on console
+
     conn.close() # close the connection, disconnect further
+
+    # ===== NOTES =====
+    # the port number may show random numbers every time because of getting random process IDs

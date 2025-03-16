@@ -25,3 +25,6 @@ def msg_to_be_sent(message): # function for easily sending messages
 
 msg_to_be_sent(f"Hello, the client's ip address is {ip_addr} and the hostname is {host_name}.") # send a sample message to the server
 msg_to_be_sent("Bye") # send another message
+
+# ===== NOTES =====
+# the port number may show random numbers every time because of getting random process IDs
