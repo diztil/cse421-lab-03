@@ -1,0 +1,30 @@
+import socket # import the necessary library
+
+format = "utf-8" # decoding/encoding format for the message text
+buffer_size = 16 # maximum value for receiving
+host_name = socket.gethostname() # store the host name after getting it
+ip_addr = socket.gethostbyname(host_name) # store the ip address
+port = 5050 # define a port number
+server_sock_addr = (ip_addr, port) # store server socket address as tuple
+
+server = socket.socket(socket.AF_INET,socket.SOCK_STREAM) # create a server
+server.bind(server_sock_addr) # set the server socket address using "ip_addr, port"tuple
+server.listen() # now the server can listen for clients
+print("Server is listening on port: ", str(port)) # just a print statement to know the server is ready
+
+while True: # continuously keep checking for any client messages
+    conn, addr = server.accept() # accept any incoming connections and set the values to a socket (conn) and socket address (addr)
+    print("Connect to:",addr) # show which client is connected
+    connected = True # set the connected status
+    while connected: # as long as the server is connected to client
+        msg_len = conn.recv(buffer_size).decode(format) # decode the previously encoded (in client) message
+        if msg_len: # if the message length exists (is received)
+            message = conn.recv(int(msg_len)).decode(format) # convert message size to int, after decoding
+            if message == "Bye": # if the client sends message that says "Bye"
+                conn.send("Goodbye".encode(format)) # send a message to client
+                print("Terminating connection with", addr) # print message to console
+                connected = False # disconnect
+            else: # otherwise, if it is a normal message
+                conn.send("Message Received".encode(format)) # send a message to client
+                print(message) # show message on console
+    conn.close() # close the connection, disconnect further
